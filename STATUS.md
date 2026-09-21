@@ -33,16 +33,10 @@ go.mod `go 1.24`, CI matrix 1.24 + stable, no APIs newer than 1.24.
 ## Board
 agentboard RUNNING.md does not exist; nothing synced.
 
-## BLOCKED (2026-09-21): pre-push hook cannot pass on this Windows host
+## Progress (collectx-builder, Claude agent)
 
-Local commit c2c1683-series (unit 1: Multiset, ListMultimap, SetMultimap) is green when Go is launched from PowerShell:
-`go test -race -shuffle=on -cover ./...` -> ok, coverage 98.9%; gofmt clean; go vet clean; golangci-lint 0 issues.
-Repo JiaBao-do/collectx was created (empty), nothing pushed.
-
-`git push` runs .githooks/pre-push through Git-for-Windows bash. Any `go test -race` launched from that bash fails:
-- `==NNNN==ERROR: ThreadSanitizer failed to allocate 0x000004540000 (72613888) bytes at 0x100e... (error code: 87)` (known issue)
-- other runs: `runtime/cgo: C:\Program Files\Go\pkg\tool\windows_amd64\cgo.exe: exit status 2` and
-  `package encoding/json/jsontext is not in std` (nondeterministic).
-Diagnosis: a test binary built from PowerShell passes when run from bash/PowerShell/cmd; a binary built by a bash-launched
-`go` fails under TSAN everywhere. So the bash-launched build differs (env), not the runtime context. Not bypassed, hook not weakened.
-Fix hook bug applied (legit, not a weakening): `git diff --exit-code -- go.mod go.sum` (go.sum absent when no deps).
+- Blocker resolved: hook uses the real gcc dir on PATH (git-bash DLL shadowing), see oss/LEARNINGS.md.
+- Pushed: 07a3b2c unit1 Multiset/Multimaps, ee962d1 BiMap/Table, d856e9b Range/RangeSet/RangeMap, e07dd7c chore leakcheck, 6d08ec7 Synchronized/examples/PITFALLS/README.
+- CI on 6d08ec7: 8/8 jobs green (ubuntu/macos/windows x Go 1.24/stable, lint, vuln).
+- Phase 5 gate (local): gofmt clean, tidy clean, vet clean, golangci-lint 0 issues, go test -race -shuffle=on ok (98.9% coverage), benchmarks run, govulncheck clean, build ok, no TODO/FIXME.
+- Fuzz: FuzzRangeSet 20s and FuzzMultiset 10s clean. Board: agentboard unavailable.
