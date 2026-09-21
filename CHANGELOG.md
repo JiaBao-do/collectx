@@ -5,4 +5,4 @@ All notable changes are documented here. Format: Keep a Changelog; versioning: S
 ## [Unreleased]
 
 ### Added
-- Multiset, ListMultimap, SetMultimap, BiMap and Table.
+- Multiset, ListMultimap, SetMultimap, BiMap, Table, Range, RangeSet and RangeMap.

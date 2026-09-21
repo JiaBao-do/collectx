@@ -60,3 +60,37 @@ func ExampleTable() {
 	fmt.Println(sum, t.Len())
 	// Output: 170 3
 }
+
+func ExampleRangeSet() {
+	a, _ := collectx.ClosedOpen(1, 5)
+	b, _ := collectx.ClosedOpen(5, 9) // connected to a: merged
+	c, _ := collectx.Closed(20, 30)
+	s := collectx.NewRangeSet(a, b, c)
+	fmt.Println(s, s.Contains(7), s.Contains(9))
+	hole, _ := collectx.Closed(3, 4)
+	s.Remove(hole)
+	fmt.Println(s)
+	fmt.Println(s.Complement())
+	// Output:
+	// {[1..9) [20..30]} true false
+	// {[1..3) (4..9) [20..30]}
+	// {(-∞..1) [3..4] [9..20) (30..+∞)}
+}
+
+func ExampleRangeMap() {
+	m := collectx.NewRangeMap[int, string]()
+	low, _ := collectx.ClosedOpen(0, 60)
+	m.Put(low, "fail")
+	m.Put(collectx.AtLeast(60), "pass")
+	mid, _ := collectx.ClosedOpen(90, 100)
+	m.Put(mid, "honors")
+	for _, score := range []int{10, 60, 95, 100} {
+		g, _ := m.Get(score)
+		fmt.Println(score, g)
+	}
+	// Output:
+	// 10 fail
+	// 60 pass
+	// 95 honors
+	// 100 pass
+}
