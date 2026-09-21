@@ -32,3 +32,17 @@ go.mod `go 1.24`, CI matrix 1.24 + stable, no APIs newer than 1.24.
 
 ## Board
 agentboard RUNNING.md does not exist; nothing synced.
+
+## BLOCKED (2026-09-21): pre-push hook cannot pass on this Windows host
+
+Local commit c2c1683-series (unit 1: Multiset, ListMultimap, SetMultimap) is green when Go is launched from PowerShell:
+`go test -race -shuffle=on -cover ./...` -> ok, coverage 98.9%; gofmt clean; go vet clean; golangci-lint 0 issues.
+Repo JiaBao-do/collectx was created (empty), nothing pushed.
+
+`git push` runs .githooks/pre-push through Git-for-Windows bash. Any `go test -race` launched from that bash fails:
+- `==NNNN==ERROR: ThreadSanitizer failed to allocate 0x000004540000 (72613888) bytes at 0x100e... (error code: 87)` (known issue)
+- other runs: `runtime/cgo: C:\Program Files\Go\pkg\tool\windows_amd64\cgo.exe: exit status 2` and
+  `package encoding/json/jsontext is not in std` (nondeterministic).
+Diagnosis: a test binary built from PowerShell passes when run from bash/PowerShell/cmd; a binary built by a bash-launched
+`go` fails under TSAN everywhere. So the bash-launched build differs (env), not the runtime context. Not bypassed, hook not weakened.
+Fix hook bug applied (legit, not a weakening): `git diff --exit-code -- go.mod go.sum` (go.sum absent when no deps).
