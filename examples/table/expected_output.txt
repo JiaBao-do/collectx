@@ -1,0 +1,4 @@
+alice art 70
+alice math 90
+math total 170 cells 3
+70 true

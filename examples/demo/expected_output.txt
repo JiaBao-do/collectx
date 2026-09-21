@@ -1,0 +1,8 @@
+go: [a.txt b.txt]
+generics: [a.txt c.txt]
+r1 mon 9-11: booked
+r1 mon 10-12: conflict
+r1 mon 11-12: booked
+r1 tue 9-10: booked
+invalid range: collectx: invalid range
+r1 mon: {[9..12)}

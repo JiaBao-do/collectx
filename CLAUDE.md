@@ -14,6 +14,8 @@ Fills the gap left by Guava / Eclipse Collections (Multimap, Multiset, BiMap, Ta
 ## Architecture
 Single package `collectx` at repo root, one file per type: multiset.go, multimap.go (List/Set), bimap.go, table.go,
 range.go (Range + cuts), rangeset.go, rangemap.go, sync.go (Synchronized wrapper). `examples/` holds runnable programs.
+`examples/*/expected_output.txt` are verified by `examples/examples_test.go` (README quick start must equal `examples/quickstart/main.go`).
+`docs/PITFALLS.md` claims are each backed by a `TestPitfall*` in `pitfalls_test.go`; change behavior => update both.
 
 ## Conventions
 - Go 1.24 floor. No API newer than 1.24 (no WaitGroup.Go, no errors.AsType). CI runs 1.24 and stable.

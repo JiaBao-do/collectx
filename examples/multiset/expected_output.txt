@@ -1,0 +1,3 @@
+total 11 distinct 8 to: 3
+[{to 3} {be 2} {is 1}]
+intersection 3 contains all: true
